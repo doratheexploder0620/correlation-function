@@ -3,4 +3,5 @@ you can use this to uunderstand why we choose the average of products to be the 
 
 
 if you want to see what all this looks like go to this link 
-correlation-function.vercel.app
+
+<a>https://correlation-function.vercel.app</a>
