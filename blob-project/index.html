@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding Correlation Functions</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        // Configure MathJax
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']], // Delimiters for inline math
+                displayMath: [['$$', '$$'], ['\\[', '\\]']], // Delimiters for display math
+                tags: 'ams' // Use AMS numbering style if needed (though we add numbers manually here)
+            },
+            svg: {
+                fontCache: 'global' // Improve rendering speed
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+</head>
+
+<body>
+    <div class="container">
+
+        <header>
+            <h1>Understanding Correlation Functions</h1>
+        </header>
+
+        <main>
+            <section id="goal">
+                <h2>1. Setting the Goal: Measuring Correlation</h2>
+                <p>
+                    How can we tell if two fluctuating quantities, let's call them A and B, are related? Our initial
+                    goal is to find a way to quantify this relationship, or "correlation". Since these quantities often
+                    change unpredictably (maybe randomly, or over time and space), whatever measure we devise needs to
+                    reflect their overall statistical behavior. Therefore, we need to find a suitable
+                    <strong>statistical average</strong> that can act as our measure.
+                </p>
+                <p>
+                    We'll use the notation $\langle \dots \rangle$ to represent taking an average. The mission is to
+                    find an averaged quantity that tells us <strong>if</strong> A and B are related in some way (i.e.,
+                    if they are correlated), rather than being completely independent.
+                </p>
+            </section>
+
+            <section id="hyp1">
+                <h2>2. Hypothesis 1: The Average of Sums Approach</h2>
+                <p>
+                    Let's test our first idea using a specific example. Imagine two particles, A and B, hopping around
+                    randomly on a grid. Let $\text{pos}_A$ and $\text{pos}_B$ represent their positions.
+                </p>
+
+                <div class="subsection">
+                    <h3>Uncorrelated Case</h3>
+                    <p>
+                        First, assume the particles hop completely independently of each other. We measure their
+                        positions many times and calculate the average of the sum, $\langle \text{pos}_A + \text{pos}_B
+                        \rangle$, and the sum of their averages, $\langle \text{pos}_A \rangle + \langle \text{pos}_B
+                        \rangle$.
+                    </p>
+                    <h4>Video 1a: Sums Approach (Uncorrelated)</h4>
+                    <video controls preload="metadata">
+                        <source src="videos/sum_uncorrelated.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <p><em>Description: This video shows the uncorrelated particles hopping randomly. The calculation
+                            confirms that $\langle \text{pos}_A + \text{pos}_B \rangle = \langle \text{pos}_A \rangle +
+                            \langle \text{pos}_B \rangle$.</em></p>
+                </div>
+
+                <div class="subsection">
+                    <h3>Correlated Case</h3>
+                    <p>
+                        Now, let's introduce a correlation. Imagine the particles still hop randomly, but they are
+                        constrained to always remain a fixed distance apart. They are clearly correlated. Let's again
+                        calculate $\langle \text{pos}_A + \text{pos}_B \rangle$ and $\langle \text{pos}_A \rangle +
+                        \langle \text{pos}_B \rangle$ for this correlated motion.
+                    </p>
+                    <h4>Video 1b: Sums Approach (Correlated)</h4>
+                    <video controls preload="metadata">
+                        <source src="videos/sum_correlated.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <p><em>Description: Here, you'll see the correlated particles hopping while maintaining a fixed
+                            distance. The calculation <em>still</em> shows $\langle \text{pos}_A + \text{pos}_B \rangle
+                            = \langle \text{pos}_A \rangle + \langle \text{pos}_B \rangle$, just like in the
+                            uncorrelated case.</em></p>
+                </div>
+
+                <div class="subsection">
+                    <h3>Conclusion for Sums</h3>
+                    <p>
+                        The videos confirm what the math tells us. Because averaging is linear ($\langle A + B \rangle =
+                        \langle A \rangle + \langle B \rangle$ always holds true), comparing the average of the sum to
+                        the sum of the averages gives the same result whether the particles are correlated or not. This
+                        measure is <strong>useless</strong> for detecting correlation.
+                    </p>
+                </div>
+            </section>
+
+            <section id="hyp2">
+                <h2>3. Hypothesis 2: The Average of Products Approach</h2>
+                <p>
+                    Since the sum approach failed, let's propose a different measure. What if we compare the average of
+                    the product of the positions, $\langle \text{pos}_A \times \text{pos}_B \rangle$, with the product
+                    of their average positions, $\langle \text{pos}_A \rangle \times \langle \text{pos}_B \rangle$?
+                    Let's test this using the same particle hopping example.
+                </p>
+
+                <div class="subsection">
+                    <h3>Uncorrelated Case Revisited</h3>
+                    <p>
+                        Consider the first scenario again, where particles A and B hop independently. We'll now
+                        calculate $\langle \text{pos}_A \times \text{pos}_B \rangle$ and $\langle \text{pos}_A \rangle
+                        \times \langle \text{pos}_B \rangle$.
+                    </p>
+                    <h4>Video 2a: Products Approach (Uncorrelated)</h4>
+                    <video controls preload="metadata">
+                        <source src="videos/product_uncorrelated.mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <p><em>Description: This video demonstrates the product calculation for the uncorrelated particles.
+                            The simulation shows that $\langle \text{pos}_A \times \text{pos}_B \rangle$ is essentially
+                            equal to $\langle \text{pos}_A \rangle \times \langle \text{pos}_B \rangle$.</em></p>
+                </div>
+
+                <div class="subsection">
+                    <h3>Correlated Case Revisited</h3>
+                    <p>
+                        Now, consider the second scenario where the particles hop randomly but maintain a fixed
+                        distance. We'll calculate $\langle \text{pos}_A \times \text{pos}_B \rangle$ and $\langle
+                        \text{pos}_A \rangle \times \langle \text{pos}_B \rangle$ for this correlated motion.
+                    </p>
+                    <h4>Video 2b: Products Approach (Correlated)</h4>
+                    <video controls preload="metadata">
+                        <source src="videos/product_correlated.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <p><em>Description: Now watch the correlated particles. The simulation shows a clear difference:
+                            $\langle \text{pos}_A \times \text{pos}_B \rangle$ is <strong>not</strong> equal to $\langle
+                            \text{pos}_A \rangle \times \langle \text{pos}_B \rangle$.</em></p>
+                </div>
+
+                <div class="subsection">
+                    <h3>Conclusion for Products</h3>
+                    <p>
+                        Success! The comparison involving products behaves differently in the uncorrelated versus
+                        correlated cases. The difference $\langle AB \rangle - \langle A \rangle \langle B \rangle$
+                        (using general A and B notation now) deviates from zero when there is correlation. This
+                        establishes it as a potentially good statistical measure for detecting correlation.
+                    </p>
+                </div>
+            </section>
+
+            <section id="defining">
+                <h2>4. Defining the Correlation Function</h2>
+                <p>
+                    Since the product approach works so well, let's make it official. That useful difference we found
+                    has a name: the <strong>covariance</strong>:
+                </p>
+                $$
+                C_{AB} = \langle AB \rangle - \langle A \rangle \langle B \rangle
+                $$
+                <p>
+                    If the covariance isn't zero, it's a signal that A and B are correlated!
+                </p>
+                <p>
+                    Often, we want to look at correlations more broadly, like how measurements relate across different
+                    times or locations. For things changing over time, $A(t)$ and $B(t)$, in a system whose basic
+                    properties don't change (it's "stationary"), we often use the <strong>time correlation
+                        function</strong>. It usually depends on the time gap $\tau = t_2 - t_1$:
+                </p>
+                $$
+                G(\tau) = \langle A(t) B(t+\tau) \rangle
+                $$
+                <p>
+                    This tells us, on average, how the value of $A$ right now is connected to the value of $B$ a time
+                    $\tau$ later.
+                </p>
+                <p>
+                    We can do something similar for quantities that vary in space, like $A(\vec{r})$ and $B(\vec{r})$,
+                    defining spatial correlation functions based on the separation distance $\vec{r} = \vec{r}_2 -
+                    \vec{r}_1$.
+                </p>
+            </section>
+
+            <section id="density">
+                <h2>5. Density Operator and Correlation Functions</h2>
+                <p>
+                    Let's apply these ideas more formally to the density of particles in a system. Consider a system of
+                    $N$ particles, where the position of particle $\alpha$ is given by the dynamical variable
+                    $\vec{x}_\alpha$. The microscopic density at a point $\vec{x}$ is defined by the <strong>density
+                        operator</strong> (using the notation $n(\vec{x})$ from the reference):
+                </p>
+                $$
+                n(\vec{x}) = \sum_{\alpha=1}^{N} \delta(\vec{x} - \vec{x}_\alpha) \quad (*)
+                $$
+                <p>
+                    Its ensemble average $\langle n(\vec{x}) \rangle$ gives the average density at point $\vec{x}$. In
+                    homogeneous, isotropic fluids, $\langle n(\vec{x}) \rangle = n = N/V$ (the average number density),
+                    independent of $\vec{x}$.
+                </p>
+                <p>
+                    The <strong>two-point density-density correlation function</strong> is:
+                </p>
+                $$
+                C_{nn}(\vec{x}_1, \vec{x}_2) = \langle n(\vec{x}_1) n(\vec{x}_2) \rangle = \left\langle \sum_{\alpha,
+                \beta} \delta(\vec{x}_1 - \vec{x}_\alpha) \delta(\vec{x}_2 - \vec{x}_\beta) \right\rangle \quad (**)
+                $$
+                <p>
+                    Scattering experiments measure the <strong>structure function</strong>, $I(\vec{q})$, which is the
+                    Fourier transform of this correlation function:
+                </p>
+                $$
+                I(\vec{q}) = \int d^d x_1 \int d^d x_2 \, e^{-i \vec{q} \cdot (\vec{x}_1 - \vec{x}_2)} \langle
+                n(\vec{x}_1) n(\vec{x}_2) \rangle \quad (***)
+                $$
+                <p>
+                    Let's show explicitly how this relates to the Fourier transform of the density operator itself.
+                    First, define the Fourier transform of $n(\vec{x})$:
+                </p>
+                $$
+                n(\vec{q}) = \int d^d x \, e^{-i \vec{q} \cdot \vec{x}} n(\vec{x}) = \sum_{\alpha=1}^{N} e^{-i \vec{q}
+                \cdot \vec{x}_\alpha} \quad (****)
+                $$
+                <p>
+                    Now consider the ensemble average $\langle n(\vec{q}) n(-\vec{q}) \rangle$:
+                </p>
+                $$
+                \begin{align*}
+                \langle n(\vec{q}) n(-\vec{q}) \rangle &= \left\langle \left( \int d^d x_1 \, e^{-i \vec{q} \cdot
+                \vec{x}_1} n(\vec{x}_1) \right) \left( \int d^d x_2 \, e^{i \vec{q} \cdot \vec{x}_2} n(\vec{x}_2)
+                \right) \right\rangle \\
+                &= \int d^d x_1 \int d^d x_2 \, e^{-i \vec{q} \cdot \vec{x}_1} e^{i \vec{q} \cdot \vec{x}_2} \langle
+                n(\vec{x}_1) n(\vec{x}_2) \rangle \\
+                &= \int d^d x_1 \int d^d x_2 \, e^{-i \vec{q} \cdot (\vec{x}_1 - \vec{x}_2)} \langle n(\vec{x}_1)
+                n(\vec{x}_2) \rangle
+                \end{align*}
+                $$
+                <p>
+                    Comparing this result with the definition of $I(\vec{q})$ in Eq. (***), we see they are identical.
+                    Therefore:
+                </p>
+                $$
+                I(\vec{q}) = \langle n(\vec{q}) n(-\vec{q}) \rangle = \langle |n(\vec{q})|^2 \rangle \quad (*****)
+                $$
+                <p><strong>Explanation for $n(\vec{q}) n(-\vec{q}) = |n(\vec{q})|^2$:</strong> This equality holds
+                    because the density $n(\vec{x})$ is a real-valued physical quantity. For any real function $f(x)$,
+                    its Fourier transform $f(q)$ has the property that $f(-q) = f(q)^*$, where $*$ denotes the complex
+                    conjugate. Let's verify this for $n(\vec{q})$:</p>
+                $$
+                \begin{align*}
+                n(\vec{q})^* &= \left( \int d^d x \, e^{-i \vec{q} \cdot \vec{x}} n(\vec{x}) \right)^* \\
+                &= \int d^d x \, (e^{-i \vec{q} \cdot \vec{x}})^* (n(\vec{x}))^* \quad \text{(Since integral and sum
+                conjugates are conjugates of terms)} \\
+                &= \int d^d x \, e^{i \vec{q} \cdot \vec{x}} n(\vec{x}) \quad \text{(Since } n(\vec{x}) \text{ is real,
+                } n(\vec{x})^* = n(\vec{x}) \text{)}
+                \end{align*}
+                $$
+                <p>Now let's evaluate $n(-\vec{q})$:</p>
+                $$
+                n(-\vec{q}) = \int d^d x \, e^{-i (-\vec{q}) \cdot \vec{x}} n(\vec{x}) = \int d^d x \, e^{i \vec{q}
+                \cdot \vec{x}} n(\vec{x})
+                $$
+                <p>Comparing the results, we see that $n(\vec{q})^* = n(-\vec{q})$. Therefore, $n(\vec{q}) n(-\vec{q}) =
+                    n(\vec{q}) n(\vec{q})^* = |n(\vec{q})|^2$.</p>
+                <p>This confirms that the structure function measured in scattering is precisely the ensemble average of
+                    the squared magnitude of the Fourier components of the density operator.</p>
+
+                <p><strong>Explanation for Recoverability of $C_{nn}$:</strong> Can we get the full real-space
+                    correlation $C_{nn}(\vec{x}_1, \vec{x}_2)$ back from the measured $I(\vec{q})$? The relationship
+                    $I(\vec{q}) = \int d^d x_1 \int d^d x_2 \, e^{-i \vec{q} \cdot (\vec{x}_1 - \vec{x}_2)}
+                    C_{nn}(\vec{x}_1, \vec{x}_2)$ involves an integral over both $\vec{x}_1$ and $\vec{x}_2$, but the
+                    exponential factor only depends on their difference $\vec{r} = \vec{x}_1 - \vec{x}_2$.
+                    If $C_{nn}$ also depends *only* on the difference $\vec{r}$ (i.e., $C_{nn}(\vec{x}_1, \vec{x}_2) =
+                    C_{nn}(\vec{x}_1 - \vec{x}_2) = C_{nn}(\vec{r})$), as is the case in statistically homogeneous
+                    systems like fluids, then we can change integration variables to $\vec{r}$ and a center-of-mass
+                    coordinate $\vec{R}_{CM} = (\vec{x}_1 + \vec{x}_2)/2$. The integral over $\vec{R}_{CM}$ simply
+                    yields the volume $V$, leaving:</p>
+                $$
+                I(\vec{q}) = V \int d^d r \, e^{-i \vec{q} \cdot \vec{r}} C_{nn}(\vec{r})
+                $$
+                <p>In this situation, $I(\vec{q})$ is directly proportional to the standard Fourier transform of
+                    $C_{nn}(\vec{r})$. We can then uniquely determine $C_{nn}(\vec{r})$ by performing an inverse Fourier
+                    transform on the measured $I(\vec{q})$ (divided by $V$).
+                    However, if $C_{nn}(\vec{x}_1, \vec{x}_2)$ depends on $\vec{x}_1$ and $\vec{x}_2$ in a more complex
+                    way (e.g., in a crystal, where correlations depend on the absolute positions relative to the lattice
+                    sites, not just the separation), then $I(\vec{q})$ represents a projection or average of this
+                    complex information onto the separation vector dependence. Information about the dependence on the
+                    absolute positions is lost during the integration, and we cannot uniquely reconstruct the full
+                    $C_{nn}(\vec{x}_1, \vec{x}_2)$ just from $I(\vec{q})$.</p>
+            </section>
+
+            <section id="ursell">
+                <h2>6. The Ursell Function (Correlation of Fluctuations)</h2>
+                <p>In analyzing density correlations, we often want to separate the trivial part arising from the
+                    product of average densities from the part that describes true correlations between fluctuations.
+                </p>
+                <p>Let $n(\vec{x})$ be the density operator at position $\vec{x}$, and $\langle n(\vec{x}) \rangle$ be
+                    its ensemble average. The two-point density-density correlation function is $C_{nn}(\vec{x}_1,
+                    \vec{x}_2) = \langle n(\vec{x}_1) n(\vec{x}_2) \rangle$.</p>
+                <p>The <strong>Ursell function</strong>, denoted $S_{nn}(\vec{x}_1, \vec{x}_2)$, is defined by
+                    subtracting the product of the averages from the full correlation function:</p>
+                $$ S_{nn}(\vec{x}_1, \vec{x}_2) = C_{nn}(\vec{x}_1, \vec{x}_2) - \langle n(\vec{x}_1) \rangle \langle
+                n(\vec{x}_2) \rangle \quad (1) $$
+                <p>Substituting the definition of $C_{nn}$:</p>
+                $$ S_{nn}(\vec{x}_1, \vec{x}_2) = \langle n(\vec{x}_1) n(\vec{x}_2) \rangle - \langle n(\vec{x}_1)
+                \rangle \langle n(\vec{x}_2) \rangle $$
+                <p>This function measures the deviation of the full correlation from the simple product of averages,
+                    capturing the essence of how the densities at two points are statistically linked beyond their mean
+                    values.</p>
+                <p>Now, let's define the density fluctuation operator as the deviation of the local density from its
+                    average:</p>
+                $$ \delta n(\vec{x}) = n(\vec{x}) - \langle n(\vec{x}) \rangle $$
+                <p>We want to show that the Ursell function is equivalent to the correlation function of these
+                    fluctuations, $\langle \delta n(\vec{x}_1) \delta n(\vec{x}_2) \rangle$. Let's calculate this
+                    correlation explicitly:</p>
+                $$
+                \begin{align*}
+                \langle \delta n(\vec{x}_1) \delta n(\vec{x}_2) \rangle &= \langle [n(\vec{x}_1) - \langle n(\vec{x}_1)
+                \rangle] [n(\vec{x}_2) - \langle n(\vec{x}_2) \rangle] \rangle \\
+                &= \langle n(\vec{x}_1)n(\vec{x}_2) - n(\vec{x}_1)\langle n(\vec{x}_2) \rangle - \langle n(\vec{x}_1)
+                \rangle n(\vec{x}_2) + \langle n(\vec{x}_1) \rangle \langle n(\vec{x}_2) \rangle \rangle \\
+                &= \langle n(\vec{x}_1)n(\vec{x}_2) \rangle - \langle n(\vec{x}_1)\langle n(\vec{x}_2) \rangle \rangle -
+                \langle \langle n(\vec{x}_1) \rangle n(\vec{x}_2) \rangle + \langle \langle n(\vec{x}_1) \rangle \langle
+                n(\vec{x}_2) \rangle \rangle \\
+                &= \langle n(\vec{x}_1)n(\vec{x}_2) \rangle - \langle n(\vec{x}_1) \rangle \langle n(\vec{x}_2) \rangle
+                - \langle n(\vec{x}_1) \rangle \langle n(\vec{x}_2) \rangle + \langle n(\vec{x}_1) \rangle \langle
+                n(\vec{x}_2) \rangle \\
+                &= \langle n(\vec{x}_1)n(\vec{x}_2) \rangle - \langle n(\vec{x}_1) \rangle \langle n(\vec{x}_2) \rangle
+                \end{align*}
+                $$
+                <p>Comparing this final result with the definition of $S_{nn}(\vec{x}_1, \vec{x}_2)$ in Eq. (1), we see
+                    they are identical.</p>
+                <p>Therefore, the Ursell function is precisely the correlation function of the density fluctuations:</p>
+                $$ S_{nn}(\vec{x}_1, \vec{x}_2) = \langle \delta n(\vec{x}_1) \delta n(\vec{x}_2) \rangle \quad (2) $$
+                <p>This function quantifies how fluctuations in density at one point are statistically related to
+                    fluctuations at another point. It decays to zero when the points are separated by more than the
+                    characteristic correlation length of the system.</p>
+
+                <div class="subsection">
+                    <h3>Fourier Transform of the Ursell Function</h3>
+                    <p>We start with the Ursell function $S_{nn}(\vec{x}_1, \vec{x}_2) = \langle \delta n(\vec{x}_1)
+                        \delta n(\vec{x}_2) \rangle$. For a statistically homogeneous system, this depends only on the
+                        separation $\vec{r} = \vec{x}_1 - \vec{x}_2$, so we write $S_{nn}(\vec{r})$.</p>
+                    <p>Let's consider the contribution of this function to the structure function $I(\vec{q})$. This
+                        contribution involves the double integral:</p>
+                    $$ \mathcal{I}_{Snn}(\vec{q}) = \int d^d x_1 \int d^d x_2 \, e^{-i \vec{q} \cdot (\vec{x}_1 -
+                    \vec{x}_2)} S_{nn}(\vec{x}_1 - \vec{x}_2) $$
+                    <p>This integral represents the unnormalized Fourier transform related to the fluctuation
+                        correlations.</p>
+                    <p>To analyze its dependence on the system size (volume $V$), we perform a change of integration
+                        variables:</p>
+                    <ul>
+                        <li>Separation vector: $\vec{r} = \vec{x}_1 - \vec{x}_2$</li>
+                        <li>Center-of-mass coordinate: $\vec{R}_{CM} = (\vec{x}_1 + \vec{x}_2)/2$</li>
+                    </ul>
+                    <p>The Jacobian for this transformation is 1, so the volume element $d^d x_1 d^d x_2$ becomes $d^d r
+                        d^d R_{CM}$. Substituting $\vec{x}_1 - \vec{x}_2 = \vec{r}$ and $S_{nn}(\vec{x}_1 - \vec{x}_2) =
+                        S_{nn}(\vec{r})$:</p>
+                    $$ \mathcal{I}_{Snn}(\vec{q}) = \int d^d R_{CM} \int d^d r \, e^{-i \vec{q} \cdot \vec{r}}
+                    S_{nn}(\vec{r}) $$
+                    <p>We can separate the integrals:</p>
+                    $$ \mathcal{I}_{Snn}(\vec{q}) = \left( \int d^d R_{CM} \right) \left( \int d^d r \, e^{-i \vec{q}
+                    \cdot \vec{r}} S_{nn}(\vec{r}) \right) $$
+                    <p>The first integral is over the center-of-mass coordinate, which spans the entire system volume:
+                    </p>
+                    $$ \int d^d R_{CM} = V $$
+                    <p>The second integral is the standard Fourier transform of the real-space Ursell function
+                        $S_{nn}(\vec{r})$. Let's denote this standard Fourier transform as $\tilde{S}_{nn}(\vec{q})$:
+                    </p>
+                    $$ \tilde{S}_{nn}(\vec{q}) = \int d^d r \, e^{-i \vec{q} \cdot \vec{r}} S_{nn}(\vec{r}) $$
+                    <p>Since $S_{nn}(\vec{r})$ describes correlations that decay over a finite length scale (independent
+                        of the total system size, for large systems), its integral $\tilde{S}_{nn}(\vec{q})$ is an
+                        <em>intensive</em> quantity, meaning it does not scale with the system volume $V$.
+                    </p>
+                    <p>Substituting these back, we find the dependence of the unnormalized integral
+                        $\mathcal{I}_{Snn}(\vec{q})$ on the volume:</p>
+                    $$ \mathcal{I}_{Snn}(\vec{q}) = V \tilde{S}_{nn}(\vec{q}) \quad (3) $$
+                    <p>This result explicitly shows that the quantity $\mathcal{I}_{Snn}(\vec{q})$, which represents the
+                        contribution of fluctuation correlations to the structure function $I(\vec{q})$, is directly
+                        proportional to the system volume $V$. It is an <em>extensive</em> quantity.</p>
+                    <p>In thermodynamics and statistical mechanics, it is usually preferable to work with intensive
+                        quantities that characterize the substance itself, independent of the amount of substance (or
+                        volume). Therefore, to obtain an intensive measure of the correlations in Fourier space, it is
+                        natural to divide the extensive quantity $\mathcal{I}_{Snn}(\vec{q})$ by the volume $V$. This
+                        leads to the definition used in Chaikin & Lubensky (Eq. 2.3.6):</p>
+                    $$ S_{nn}(\vec{q})_{\text{book}} = \frac{1}{V} \mathcal{I}_{Snn}(\vec{q}) = \frac{1}{V} \int d^d x_1
+                    \int d^d x_2 \, e^{-i \vec{q} \cdot (\vec{x}_1 - \vec{x}_2)} S_{nn}(\vec{x}_1, \vec{x}_2) \quad (4)
+                    $$
+                    <p>As shown by Eq. (3), this definition yields:</p>
+                    $$ S_{nn}(\vec{q})_{\text{book}} = \frac{1}{V} (V \tilde{S}_{nn}(\vec{q})) = \tilde{S}_{nn}(\vec{q})
+                    $$
+                    <p>So, the quantity $S_{nn}(\vec{q})$ defined with the $1/V$ normalization is indeed the standard,
+                        intensive Fourier transform of the real-space Ursell function $S_{nn}(\vec{r})$.</p>
+                </div>
+            </section>
+
+            <section id="structure">
+                <h2>7. Structure Function: Average vs. Fluctuations</h2>
+                <p>We previously established the relationship between the total structure function $I(\vec{q}) = \langle
+                    |n(\vec{q})|^2 \rangle$ and the intensive Fourier transform of the Ursell function, $S_{nn}(\vec{q})
+                    = \int d^d r \, e^{-i \vec{q} \cdot \vec{r}} S_{nn}(\vec{r})$:</p>
+                $$ I(\vec{q}) = |\langle n(\vec{q}) \rangle|^2 + V S_{nn}(\vec{q}) \quad (5) $$
+                <p>where $\langle n(\vec{q}) \rangle = \int d^d x \, e^{-i \vec{q} \cdot \vec{x}} \langle n(\vec{x})
+                    \rangle$ is the Fourier transform of the average density profile. This equation is fundamental as it
+                    separates the total scattering intensity $I(\vec{q})$ into two physically distinct contributions.
+                </p>
+
+                <div class="subsection">
+                    <h3>Scattering from the Average Structure: $|\langle n(\vec{q}) \rangle|^2$</h3>
+                    <p>The first term, $|\langle n(\vec{q}) \rangle|^2$, represents coherent scattering arising purely
+                        from the <em>average</em> spatial arrangement of particles in the system. To understand its
+                        dependence on the system size (volume $V$), consider the definition of $\langle n(\vec{q})
+                        \rangle$:</p>
+                    $$ \langle n(\vec{q}) \rangle = \int_V d^d x \, e^{-i \vec{q} \cdot \vec{x}} \langle n(\vec{x})
+                    \rangle $$
+                    <p>The integral is performed over the entire system volume $V$. If the average density profile
+                        $\langle n(\vec{x}) \rangle$ is non-zero over this volume (which is generally true, e.g., the
+                        constant density $n$ in a fluid or the periodic density in a crystal), the value of the integral
+                        will typically scale proportionally to the volume $V$, especially for wavevectors $\vec{q}$ that
+                        correspond to the average structure (like $\vec{q}=0$ for fluids, or the reciprocal lattice
+                        vectors $\vec{G}$ for crystals).
+                        Therefore, we can generally state that $\langle n(\vec{q}) \rangle \propto V$.
+                        Consequently, the scattering intensity arising from this average structure scales with the
+                        square of the volume:</p>
+                    $$ |\langle n(\vec{q}) \rangle|^2 \propto V^2 $$
+                    <p>This very strong $V^2$ dependence signifies that this scattering component arises from the
+                        coherent addition of waves scattered from the average structure across the entire macroscopic
+                        sample.</p>
+                    <p><strong>Case: Homogeneous Fluid:</strong> For a homogeneous fluid, the average density is
+                        constant, $\langle n(\vec{x}) \rangle = n$. Its Fourier transform is:</p>
+                    $$ \langle n(\vec{q}) \rangle = n \int_V d^d x \, e^{-i \vec{q} \cdot \vec{x}} $$
+                    <p>In the limit of an infinitely large volume, this integral becomes a Dirac delta function: $n
+                        (2\pi)^d \delta(\vec{q})$. For a large but finite volume $V$, the integral is sharply peaked
+                        around $\vec{q}=0$, and its value exactly at $\vec{q}=0$ is $\int_V d^d x \, n = n V$. This
+                        means $\langle n(\vec{q}) \rangle$ is effectively non-zero only for $\vec{q}=0$. As a result,
+                        the strong $V^2$ contribution to the total scattering $I(\vec{q})$ occurs only in the forward
+                        direction ($\vec{q}=0$). Using the formal relation for large $V$, we can approximate $|\langle
+                        n(\vec{q}) \rangle|^2 \approx |n(2\pi)^d \delta(\vec{q})|^2$. A more rigorous treatment
+                        involving the finite volume shows this term is proportional to $n^2 V (2\pi)^d \delta(\vec{q})$.
+                    </p>
+                </div>
+
+                <div class="subsection">
+                    <h3>Scattering from Fluctuations: $V S_{nn}(\vec{q})$</h3>
+                    <p>The second term in Eq. (5), $V S_{nn}(\vec{q})$, represents the scattering contribution arising
+                        from the correlations in the density <em>fluctuations</em> $\delta n(\vec{x}) = n(\vec{x}) -
+                        \langle n(\vec{x}) \rangle$. As previously derived, $S_{nn}(\vec{q}) = \int d^d r \, e^{-i
+                        \vec{q} \cdot \vec{r}} S_{nn}(\vec{r})$ is the standard Fourier transform of the real-space
+                        Ursell function $S_{nn}(\vec{r})$. Because $S_{nn}(\vec{r})$ describes correlations that
+                        typically decay to zero over a finite microscopic length scale (the correlation length),
+                        independent of the total system size (for large systems), its Fourier transform
+                        $S_{nn}(\vec{q})$ is an <em>intensive</em> quantity. Consequently, the contribution $V
+                        S_{nn}(\vec{q})$ to the total scattering intensity $I(\vec{q})$ scales linearly with the system
+                        volume $V$. This $V$ dependence represents incoherent or diffuse scattering from local
+                        fluctuations throughout the sample volume.</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>Structure Factor per Volume $\mathcal{S}(\vec{q})$ for Fluids</h3>
+                    <p>It is often convenient to analyze the scattering intensity per unit volume, which we denote here
+                        as $\mathcal{S}(\vec{q}) = I(\vec{q})/V$. Let's apply this to a homogeneous fluid using Eq. (5).
+                        Substituting the expression for the average density term in a fluid (using d=3 dimensions for
+                        specificity):</p>
+                    $$ I(\vec{q}) \approx n^2 V (2\pi)^3 \delta(\vec{q}) + V S_{nn}(\vec{q}) $$
+                    <p>Now, dividing by the volume $V$ gives the intensity per unit volume:</p>
+                    $$ \mathcal{S}(\vec{q}) = \frac{I(\vec{q})}{V} \approx \frac{1}{V} [n^2 V (2\pi)^3 \delta(\vec{q}) +
+                    V S_{nn}(\vec{q})] $$
+                    $$ \mathcal{S}(\vec{q}) \approx n^2 (2\pi)^3 \delta(\vec{q}) + S_{nn}(\vec{q}) $$
+                    <p>Rearranging gives the relationship:</p>
+                    $$ \mathcal{S}(\vec{q}) \approx S_{nn}(\vec{q}) + n^2(2\pi)^3\delta(\vec{q}) \quad (6) $$
+                    <p>This equation provides a clear interpretation for scattering from fluids:</p>
+                    <ul>
+                        <li>At $\vec{q}=0$: The scattering intensity per unit volume $\mathcal{S}(\vec{q})$ diverges due
+                            to the delta function, reflecting the coherent forward scattering from the average density
+                            $n$.</li>
+                        <li>For $\vec{q} \neq 0$: The delta function term is zero. Therefore, $\mathcal{S}(\vec{q}) =
+                            S_{nn}(\vec{q})$. The scattering intensity per unit volume away from the forward direction
+                            is identical to the intensive Fourier transform of the Ursell function. It directly measures
+                            the correlations in density fluctuations. $S_{nn}(\vec{q}=0)$ itself remains finite and is
+                            related to macroscopic thermodynamic properties like the isothermal compressibility.</li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h3>Interpreting Scattering in Other Systems</h3>
+                    <p>The general separation $I(\vec{q}) = |\langle n(\vec{q}) \rangle|^2 + V S_{nn}(\vec{q})$ remains
+                        valid:</p>
+                    <p><strong>Ideal Gas:</strong> In an ideal gas, particles are completely uncorrelated. This means
+                        $S_{nn}(\vec{r})=0$ for $\vec{r} \neq 0$. The only contribution is the self-correlation term,
+                        which leads to $S_{nn}(\vec{q}) = n$ (constant). The average density is $\langle n(\vec{x})
+                        \rangle = n$. So, $I(\vec{q}) = |n(2\pi)^d \delta(\vec{q})|^2 + V n$. For $\vec{q} \neq 0$,
+                        $I(\vec{q}) = V n = N$. This corresponds to incoherent scattering from $N$ independent
+                        particles.</p>
+                    <p><strong>Periodic Solids:</strong> In a perfect crystal, the average density $\langle n(\vec{x})
+                        \rangle$ is a periodic function with the symmetry of the lattice. Its Fourier transform $\langle
+                        n(\vec{q}) \rangle$ is non-zero only at the specific wavevectors corresponding to the reciprocal
+                        lattice vectors, $\vec{q} = \vec{G}$. At these vectors, the term $|\langle n(\vec{q})
+                        \rangle|^2$ is proportional to $V^2$ and gives rise to the sharp, intense <strong>Bragg
+                            peaks</strong> characteristic of crystalline order. Between these Bragg peaks ($\vec{q} \neq
+                        \vec{G}$), the average structure term $|\langle n(\vec{q}) \rangle|^2$ is zero. The scattering
+                        intensity in these regions is given entirely by the fluctuation term $I(\vec{q}) = V
+                        S_{nn}(\vec{q})$. This $S_{nn}(\vec{q})$ now represents correlations in the fluctuations of
+                        atoms around their average lattice positions (due to thermal vibrations, i.e., phonons) or
+                        correlations due to defects. This contribution results in weaker, continuous <strong>diffuse
+                            scattering</strong> observed between the sharp Bragg peaks.</p>
+                </div>
+            </section>
+
+            <section id="pair">
+                <h2>8. The Pair Distribution Function $g(\vec{x})$</h2>
+
+                <div class="subsection">
+                    <h3>Introduction: What is $g(\vec{x})$?</h3>
+                    <p>Imagine looking at a system of particles (like a liquid or gas). If you pick one specific
+                        particle and conceptually place it at the origin of your coordinate system, the <strong>pair
+                            distribution function</strong>, $g(\vec{x})$, tells you how likely you are to find
+                        <em>another</em> particle at a position $\vec{x}$ relative to the one at the origin.
+                    </p>
+                    <p>More precisely, if the average number density of particles throughout the system is $n$, then $n
+                        g(\vec{x})$ represents the average density you would observe at point $\vec{x}$ knowing that
+                        there is a particle fixed at the origin.</p>
+                    <ul>
+                        <li>If $g(\vec{x}) = 1$, the density at $\vec{x}$ is just the average density $n$. This means
+                            the particle at the origin has no influence on the density at $\vec{x}$, which happens for
+                            large distances or in a completely random system (ideal gas).</li>
+                        <li>If $g(\vec{x}) > 1$, particles are more likely to be found at separation $\vec{x}$ than
+                            purely by chance (e.g., forming shells of nearest neighbors).</li>
+                        <li>If $g(\vec{x}) < 1$, particles are less likely to be found at separation $\vec{x}$ (e.g.,
+                                $g(\vec{x}) \approx 0$ for small $|\vec{x}|$ because particles cannot overlap).</li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h3>Calculating $g(\vec{x})$: Eq. 2.3.12 Explained</h3>
+                    <p>One way to formalize the calculation of $g(\vec{x})$ in a homogeneous system is given by the
+                        expression:</p>
+                    $$ g(\vec{x}) = \frac{1}{n} \left\langle \sum_{\alpha' \neq 0} \delta(\vec{x} - (\vec{x}_{\alpha'} -
+                    \vec{x}_0)) \right\rangle \quad (7) $$
+                    <p>Let's break this down:</p>
+                    <ul>
+                        <li>$\vec{x}_0$: We conceptually fix one particle (labeled 0) at the origin.</li>
+                        <li>$\vec{x}_{\alpha'}$: Represents the position of any other particle ($\alpha' \neq 0$).</li>
+                        <li>$\vec{x}_{\alpha'} - \vec{x}_0$: This is the vector pointing from the origin particle (0) to
+                            particle $\alpha'$.</li>
+                        <li>$\delta(\vec{x} - (\vec{x}_{\alpha'} - \vec{x}_0))$: This delta function picks out only
+                            those particles $\alpha'$ whose separation from particle 0 is exactly $\vec{x}$.</li>
+                        <li>$\sum_{\alpha' \neq 0} \dots$: We sum these delta functions over all particles <em>other
+                                than</em> the one at the origin. This sum gives the instantaneous density of other
+                            particles at separation $\vec{x}$ from particle 0 in a specific configuration.</li>
+                        <li>$\langle \dots \rangle$: We take the ensemble average over all possible configurations (all
+                            allowed positions of all particles) consistent with the system's thermodynamics. This gives
+                            the average density of other particles at separation $\vec{x}$ from particle 0.</li>
+                        <li>$\frac{1}{n}$: We divide by the average overall density $n$ to get the <em>relative</em>
+                            density, which is the definition of $g(\vec{x})$.</li>
+                    </ul>
+                    <p>The crucial assumption for this specific form is <strong>homogeneity</strong>. Because the system
+                        is homogeneous, the average environment around any particle is the same. Therefore, it doesn't
+                        matter which specific particle we choose to label as '0' and place at the origin; the resulting
+                        average density profile of neighbors relative to it will be identical. This justifies
+                        calculating the average based on fixing just one particle.</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>Intuitive Method for Determining $g(\vec{x})$</h3>
+                    <p>Equation (7) leads to a direct, practical way to estimate $g(\vec{x})$ from simulations or even
+                        conceptually:</p>
+                    <ol>
+                        <li>Take a snapshot (a configuration) of all particle positions.</li>
+                        <li>Pick one particle (particle A) and consider it to be at the origin.</li>
+                        <li>Look at a small volume element $d^d x$ located at position $\vec{x}$ relative to particle A.
+                        </li>
+                        <li>Count how many <em>other</em> particles fall within this volume element.</li>
+                        <li>Repeat steps 2-4, choosing different particles (B, C, ...) as the origin particle.</li>
+                        <li>Average the count obtained in step 4 over all the chosen origin particles. Let this average
+                            count be $\langle \text{Count}(\vec{x}, d^d x) \rangle$.</li>
+                        <li>The pair distribution function is then obtained by normalizing this average count by the
+                            number of particles you'd expect in that volume purely by chance, which is $n d^d x$:</li>
+                    </ol>
+                    $$ g(\vec{x}) = \frac{\langle \text{Count}(\vec{x}, d^d x) \rangle}{n d^d x} $$
+                </div>
+
+                <div class="subsection">
+                    <h3>Relation to Scattering: Eq. 2.3.13 Explained</h3>
+                    <p>A key result connects the pair distribution function $g(\vec{x})$ to the experimentally
+                        measurable scattering. Often, this is expressed via the static structure factor $S(\vec{q})$,
+                        typically defined as the total scattering intensity $I(\vec{q})$ divided by the number of
+                        particles $N$ (i.e., $S(\vec{q}) = I(\vec{q})/N$). For wavevectors $\vec{q} \neq 0$, this
+                        structure factor is related to $g(\vec{x})$ by:</p>
+                    $$ S(\vec{q}) = 1 + n \int d^d x \, e^{-i \vec{q} \cdot \vec{x}} (g(\vec{x}) - 1) \quad (\text{for }
+                    \vec{q} \neq 0) \quad (8) $$
+                    <p>Why is this important?</p>
+                    <ul>
+                        <li>It shows that the way particles scatter waves (like X-rays or neutrons) at different angles
+                            (related to $\vec{q}$) depends directly on how particles are arranged relative to each other
+                            in real space (described by $g(\vec{x})$).</li>
+                        <li>The '1' corresponds to the scattering from individual particles if they were uncorrelated
+                            (the "self" scattering part).</li>
+                        <li>The integral term involves the Fourier transform of the total correlation function
+                            $h(\vec{x}) = g(\vec{x}) - 1$. It represents the contribution from the interference of waves
+                            scattered by different, correlated particles.</li>
+                        <li>This equation allows us to work backward: by measuring $S(\vec{q})$ experimentally (for
+                            $\vec{q} \neq 0$), we can perform an inverse Fourier transform to calculate $h(\vec{x})$ and
+                            thus $g(\vec{x})$ (or $g(r)$ for isotropic systems), revealing the microscopic structure of
+                            the material.</li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>May 2025</p>
+        </footer>
+
+    </div>
+</body>
+
+</html>
